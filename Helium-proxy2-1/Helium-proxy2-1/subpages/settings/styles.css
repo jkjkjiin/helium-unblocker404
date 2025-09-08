@@ -1,0 +1,252 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+
+:root {
+    --background-color: 
+        255,255,255;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+#settings-container {
+    padding: 15px 0 0 40px;
+}
+
+.title {
+    font-size: 50px;
+    font-weight: 900;
+    color: white;
+    padding: 10px 20px;
+    background: rgba(var(--background-color), 0.15); 
+    backdrop-filter: blur(10px); 
+    border-radius: 12px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: inline-block; 
+    text-align: center;
+}
+
+.side-menu {
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+    flex-direction: column;
+    padding: 15px;
+    background: rgba(var(--background-color), 0.1); 
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.side-menu ul {
+
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.side-menu li {
+    margin-top: 15px;
+    font-size: 23px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.divider {
+    width: 3px;
+    border-radius: 5px;
+    height: 100px;
+    background-color: white;
+    margin-top: auto; 
+    border: none;
+    position: absolute;
+    left: 257.5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.settings-page {
+    position: absolute;
+    width: calc(100vw - 230px);
+    left: 210px;
+    display: flex;
+  justify-content: safe center;
+  align-items: center;
+  row-gap: 50px;
+  column-gap: 50px;
+  flex-wrap: wrap;
+  height: calc(100vh - 300px);
+  overflow-y: auto;
+  align-content: space-evenly;
+}
+
+.settings-container {
+    flex: 1 1 calc(33.333% - 20px);
+    min-width: 280px; 
+    max-width: 350px;
+    height: 175px;
+    box-sizing: border-box; 
+}
+
+.settings-panel {
+    position: absolute;
+    width: 350px;
+    height: 175px;
+    border-radius: 12px;
+    display: block;
+    background: rgba(var(--background-color), 0.15); 
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+    transition: transform 0.2s ease-in-out;
+}
+
+.settings-panel:hover {
+    transform: scale(1.05); 
+}
+
+.settings-title {
+    margin-top: 5px;
+    margin-left: 7.5px;
+    display: block;
+    position: absolute;
+    color: rgb(255, 255, 255);
+    font-size: 15px;
+    font-family: 'Inter';
+    font-weight: 800;
+}
+
+.settings-desc {
+    position: absolute;
+    font-size: 12.5px;
+    font-family: 'Inter';
+    font-weight: 200;
+    text-align: right;
+    color: #fff;
+    width: 175px;
+    margin-top: 7px;
+    margin-left: 167.5px;
+    vertical-align: middle;
+}
+
+.settings-select {
+    position:absolute;
+    margin-left: 85px;
+    margin-top: 80px;
+    background-color: rgb(var(--background-color), .2); 
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    width: 175px;
+    height: 25px;
+    font-family: 'Inter';
+    font-weight: 400;
+}
+
+.settings-select option {
+    color: #000; 
+}
+
+.settings-input {
+    position:absolute;
+    margin-left: 85px;
+    margin-top: 80px;
+    background-color: rgb(var(--background-color), .2); 
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    width: 175px;
+    height: 25px;
+    font-family: 'Inter';
+    font-weight: 400;
+    text-align: center;
+}
+
+.settings-input::placeholder {
+    color: #fff;
+}
+::-webkit-scrollbar {
+    width: 5px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--background-color), .4); 
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #fff; 
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #fff; 
+  }
+.settings-button {
+    position:absolute;
+    margin-left: 85px;
+    margin-top: 80px;
+    background-color: rgb(var(--background-color), .2);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    width: 175px;
+    height: 25px;
+    font-family: 'Inter';
+    font-weight: 400;
+}
+
+.active {
+    background-color: rgb(var(--background-color), .5);
+    color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    .title {
+        font-size: 35px;
+        position: absolute; 
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    #settings-container {
+        padding: 25px 0 0 0;
+    }
+
+    .settings-page {
+        top: 150px; 
+        height: calc(100vh - 190px); 
+        width: calc(100% - 40px); 
+        position: absolute; 
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0;
+    }
+
+    .side-menu {
+        flex-direction: row;
+        width: 100vw;
+        position: absolute; 
+        top: 105px;
+        transform: none;
+    }
+
+    .side-menu ul {
+        display: flex; 
+        justify-content: space-around;
+        padding-left: 0;
+    }
+
+    .side-menu li {
+        font-size: 18px;
+        margin: 0 10px; 
+    }
+
+    .divider {
+        display: none; 
+    }
+}
