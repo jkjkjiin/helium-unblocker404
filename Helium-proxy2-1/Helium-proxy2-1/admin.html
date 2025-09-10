@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Portal - Helium</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .input-focus:focus {
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      border-color: rgb(99, 102, 241);
+    }
+    .btn-primary {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    .loading-spinner {
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 2px solid white;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
+    @keyframes shake {
+      0%, 20%, 40%, 60%, 80% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex justify-center items-center p-4">
+  <div class="w-full max-w-md">
+    <div class="glass-card p-8 rounded-2xl shadow-2xl">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          </svg>
+        </div>
+        <h1 class="text-3xl font-bold text-white mb-2">Admin Portal</h1>
+        <p class="text-white text-opacity-80">Secure access to Helium administration</p>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-6">
+        <div>
+          <label for="password" class="block text-sm font-medium text-white text-opacity-90 mb-2">
+            Admin Password
+          </label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="password" 
+              placeholder="Enter admin password" 
+              required 
+              class="w-full p-4 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-xl text-white placeholder-white placeholder-opacity-60 input-focus focus:outline-none transition-all duration-300"
+            >
+            <button 
+              type="button" 
+              onclick="togglePassword('password')"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white text-opacity-60 hover:text-opacity-90"
+            >
+              <svg id="password-eye" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label for="token" class="block text-sm font-medium text-white text-opacity-90 mb-2">
+            2FA Authentication Code
+          </label>
+          <input 
+            type="text" 
+            id="token" 
+            placeholder="Enter 6-digit code" 
+            required
+            maxlength="6"
+            pattern="[0-9]{6}"
+            class="w-full p-4 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-xl text-white placeholder-white placeholder-opacity-60 input-focus focus:outline-none transition-all duration-300 text-center text-2xl tracking-widest"
+          >
+        </div>
+
+        <button 
+          type="submit" 
+          id="loginBtn"
+          class="w-full btn-primary text-white font-semibold py-4 px-6 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span id="loginText">Sign In to Admin Portal</span>
+          <div id="loginSpinner" class="loading-spinner mx-auto hidden"></div>
+        </button>
+      </form>
+
+      <!-- Error Message -->
+      <div id="error" class="mt-6 p-4 bg-red-500 bg-opacity-20 border border-red-500 border-opacity-30 rounded-xl text-red-200 text-center hidden">
+        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span id="errorText"></span>
+      </div>
+
+      <!-- Success Message -->
+      <div id="success" class="mt-6 p-4 bg-green-500 bg-opacity-20 border border-green-500 border-opacity-30 rounded-xl text-green-200 text-center hidden">
+        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span>Login successful! Redirecting...</span>
+      </div>
+
+      <!-- Footer -->
+      <div class="mt-8 text-center">
+        <p class="text-white text-opacity-60 text-sm">
+          © 2025 Abyss Services LLC - Helium Admin
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let loginAttempts = 0;
+    const maxAttempts = 3;
+    const lockoutTime = 300000; // 5 minutes
+
+    function togglePassword(fieldId) {
+      const field = document.getElementById(fieldId);
+      const eye = document.getElementById(fieldId + '-eye');
+
+      if (field.type === 'password') {
+        field.type = 'text';
+        eye.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>';
+      } else {
+        field.type = 'password';
+        eye.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>';
+      }
+    }
+
+    function showError(message) {
+      const error = document.getElementById("error");
+      const errorText = document.getElementById("errorText");
+      const form = document.getElementById("loginForm");
+
+      errorText.textContent = message;
+      error.classList.remove("hidden");
+      form.classList.add("shake");
+
+      setTimeout(() => {
+        form.classList.remove("shake");
+      }, 500);
+
+      setTimeout(() => {
+        error.classList.add("hidden");
+      }, 5000);
+    }
+
+    function showSuccess() {
+      const success = document.getElementById("success");
+      const error = document.getElementById("error");
+
+      error.classList.add("hidden");
+      success.classList.remove("hidden");
+    }
+
+    function setLoading(isLoading) {
+      const btn = document.getElementById("loginBtn");
+      const text = document.getElementById("loginText");
+      const spinner = document.getElementById("loginSpinner");
+
+      if (isLoading) {
+        text.classList.add("hidden");
+        spinner.classList.remove("hidden");
+        btn.disabled = true;
+      } else {
+        text.classList.remove("hidden");
+        spinner.classList.add("hidden");
+        btn.disabled = false;
+      }
+    }
+
+    function checkLockout() {
+      const lockoutEnd = localStorage.getItem('adminLockoutEnd');
+      if (lockoutEnd && new Date().getTime() < parseInt(lockoutEnd)) {
+        const remaining = Math.ceil((parseInt(lockoutEnd) - new Date().getTime()) / 60000);
+        showError(`Too many failed attempts. Try again in ${remaining} minutes.`);
+        return true;
+      }
+      return false;
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+
+      if (checkLockout()) return;
+
+      const password = document.getElementById("password").value;
+      const token = document.getElementById("token").value;
+
+      if (!password || !token) {
+        showError("All fields are required");
+        return;
+      }
+
+      if (token.length !== 6 || !/^\d+$/.test(token)) {
+        showError("2FA code must be 6 digits");
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          body: JSON.stringify({ password, token })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          showSuccess();
+          localStorage.removeItem('adminLoginAttempts');
+          localStorage.removeItem('adminLockoutEnd');
+
+          setTimeout(() => {
+            window.location.href = "/admin";
+          }, 1500);
+        } else {
+          loginAttempts++;
+          localStorage.setItem('adminLoginAttempts', loginAttempts.toString());
+
+          if (loginAttempts >= maxAttempts) {
+            const lockoutEnd = new Date().getTime() + lockoutTime;
+            localStorage.setItem('adminLockoutEnd', lockoutEnd.toString());
+            showError("Too many failed attempts. Account locked for 5 minutes.");
+          } else {
+            const remaining = maxAttempts - loginAttempts;
+            showError(`${data.message || "Invalid credentials"}. ${remaining} attempts remaining.`);
+          }
+
+          // Clear form on error
+          document.getElementById("password").value = "";
+          document.getElementById("token").value = "";
+          document.getElementById("password").focus();
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        showError("Connection failed. Please check your network and try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // Auto-format 2FA token input
+    document.getElementById('token').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 6) value = value.slice(0, 6);
+      e.target.value = value;
+    });
+
+    // Initialize login attempts from localStorage
+    loginAttempts = parseInt(localStorage.getItem('adminLoginAttempts') || '0');
+
+    // Check if locked out on page load
+    if (checkLockout()) {
+      document.getElementById("loginForm").style.display = "none";
+    }
+
+    // Focus password field on load
+    window.addEventListener('load', () => {
+      document.getElementById('password').focus();
+    });
+  </script>
+  <!--cookie_consent_script-->
+  <script src="/assets/js/cookie_consent.js"></script>
+</body>
+</html>
