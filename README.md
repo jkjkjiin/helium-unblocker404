@@ -6,6 +6,4 @@ i was not able to reverse engineer its broswer servers in time before Helium unb
 
 replit version link https://replit.com/@videja9739/Helium-proxy2-1#README.md
 
-i modifed this with the nasa cloak click shift and this key > ` to get this key > ~ that brings u to the cloaked unblocker page an about:blank to unblocker 
-
 this respotory is being worked on i am attempting to get this proxy to have its ultravilot to work
